@@ -1,8 +1,9 @@
 import {expect, test} from "@playwright/test";
+import {urls} from "../model/login.constants";
 
 test.describe("Login suite", () => {
     test("Standard user valid login", async ({page}) => {
-        await page.goto("https://www.saucedemo.com/");
+        await page.goto(urls.index);
         await page.fill("#user-name", "standard_user");
         await page.fill("#password", "secret_sauce");
         await page.click("#login-button");
@@ -10,7 +11,7 @@ test.describe("Login suite", () => {
     });
 
     test("Standard user login with invalid username", async ({page}) => {
-        await page.goto("https://www.saucedemo.com/");
+        await page.goto(urls.index);
         await page.fill("#user-name", "standarduser");
         await page.fill("#password", "secret_sauce");
         await page.click("#login-button");
@@ -19,7 +20,7 @@ test.describe("Login suite", () => {
     });
 
     test("Standard user login with invalid password", async ({page}) => {
-        await page.goto("https://www.saucedemo.com/");
+        await page.goto(urls.index);
         await page.fill("#user-name", "standard_user");
         await page.fill("#password", "secretsauce");
         await page.click("#login-button");
@@ -28,7 +29,7 @@ test.describe("Login suite", () => {
     });
 
     test("Standard user login with empty username", async ({page}) => {
-        await page.goto("https://www.saucedemo.com/");
+        await page.goto(urls.index);
         await page.fill("#user-name", "");
         await page.fill("#password", "secret_sauce");
         await page.click("#login-button");
@@ -37,7 +38,7 @@ test.describe("Login suite", () => {
     });
 
     test("Standard user login with empty password", async ({page}) => {
-        await page.goto("https://www.saucedemo.com/");
+        await page.goto(urls.index);
         await page.fill("#user-name", "standard_user");
         await page.fill("#password", "");
         await page.click("#login-button");
@@ -46,7 +47,7 @@ test.describe("Login suite", () => {
     });
 
     test("Password input should be hidden)", async ({ page }) => {
-        await page.goto("https://www.saucedemo.com/");
+        await page.goto(urls.index);
         const passwordField = page.locator("#password");
         // Check that the type is "password"
         await expect(passwordField).toHaveAttribute("type", "password");
