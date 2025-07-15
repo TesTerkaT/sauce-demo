@@ -7,7 +7,7 @@ test.describe("Login suite", () => {
         await page.fill("#user-name", "standard_user");
         await page.fill("#password", "secret_sauce");
         await page.click("#login-button");
-        await expect(page).toHaveURL("https://www.saucedemo.com/inventory.html");
+        await expect(page).toHaveURL(urls.inventory);
     });
 
     test("Standard user login with invalid username", async ({page}) => {
