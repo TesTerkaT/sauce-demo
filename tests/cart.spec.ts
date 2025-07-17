@@ -21,7 +21,6 @@ test.describe('Cart suite', () => {
         await page.click("#add-to-cart-sauce-labs-backpack");
 
         const cartBadge = page.locator(".shopping_cart_link");
-        await expect(cartBadge).toBeVisible()
         await expect(cartBadge).toHaveText("1");
 
         await page.click("#remove-sauce-labs-backpack");
