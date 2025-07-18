@@ -1,24 +1,24 @@
-import {expect, Page} from "@playwright/test";
+import {expect, Locator, Page} from "@playwright/test";
 
 export class CartPageObjectModel {
     readonly page: Page;
+    readonly cartBadge: Locator;
+    readonly itemPrice: Locator;
 
     constructor(page: Page) {
         this.page = page
+        this.cartBadge = page.locator(".shopping_cart_link");
+        this.itemPrice = page.locator(".inventory_item_price").locator("nth=0");
     }
 
     async addItemToCart(itemName: string, expectedItemCount: string) {
         await this.page.click(`#add-to-cart-${itemName}`);
-
-        const cartBadge = this.page.locator(".shopping_cart_link");
-        await expect(cartBadge).toHaveText(expectedItemCount);
+        await expect(this.cartBadge).toHaveText(expectedItemCount);
     }
 
     async removeItemFromCart(itemName: string, expectedItemCount: string) {
         await this.page.click(`#remove-${itemName}`);
-
-        const cartBadge = this.page.locator(".shopping_cart_link");
-        await expect(cartBadge).toHaveText(expectedItemCount);
+        await expect(this.cartBadge).toHaveText(expectedItemCount);
     }
 
     async addToRemove(itemName: string) {
@@ -51,27 +51,21 @@ export class CartPageObjectModel {
 
     async sortPriceLowToHigh() {
         await this.page.selectOption(".product_sort_container", "Price (low to high)");
-
-        const itemPrice = this.page.locator(".inventory_item_price").locator("nth=0");
-        await expect(itemPrice).toHaveText("$7.99");
+        await expect(this.itemPrice).toHaveText("$7.99");
     }
 
     async sortPriceHighToLow() {
         await this.page.selectOption(".product_sort_container", "Price (high to low)");
-
-        const itemPrice = this.page.locator(".inventory_item_price").locator("nth=0");
-        await expect(itemPrice).toHaveText("$49.99");
+        await expect(this.itemPrice).toHaveText("$49.99");
     }
 
     async itemNameNavigation(itemName: string, itemNumber: number) {
         await this.page.click(`#${itemName}_title_link`);
-
         await expect(this.page).toHaveURL(`https://www.saucedemo.com/inventory-item.html?id=${itemNumber}`);
     }
 
     async itemImageNavigation(itemName: string, itemNumber: number) {
         await this.page.click(`#${itemName}_img_link`);
-
         await expect(this.page).toHaveURL(`https://www.saucedemo.com/inventory-item.html?id=${itemNumber}`);
     }
 }
