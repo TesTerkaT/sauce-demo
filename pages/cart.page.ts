@@ -57,18 +57,14 @@ export class CartPageObjectModel {
         // Find all item prices (deklarace neměnné konstanty productPrices, které přiřazuji hodnotu lokátoru s metodou allTextContents)
         const productPrices = await this.page.locator(".inventory_item_price").allTextContents();
         // Remove $ sign and transform all prices from string to number
-        const numbers = productPrices.map(price => parseFloat(price.replace('$', '')));
-
-        return numbers;
+        return productPrices.map(price => parseFloat(price.replace('$', '')));
     }
 
     // : Promise<number[]> = návratový typ metody
     async getSortedPricesLowToHigh(): Promise<number[]> {
         const numbers = await this.getAllItemPrices()
         // Sort prices as numbers from low to high
-        const sorted = numbers.sort((a, b) => a - b);
-
-        return sorted
+        return numbers.sort((a, b) => a - b)
     }
 
     async sortPriceHighToLow() {
