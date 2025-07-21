@@ -16,7 +16,17 @@ export class CartPageObjectModel {
         await expect(this.cartBadge).toHaveText(expectedItemCount);
     }
 
+    async goToCart() {
+        await this.page.click(".shopping_cart_link");
+        await expect(this.page).toHaveURL("https://www.saucedemo.com/cart.html");
+    }
+
     async removeItemFromCart(itemName: string, expectedItemCount: string) {
+        await this.page.click(`#remove-${itemName}`);
+        await expect(this.cartBadge).toHaveText(expectedItemCount);
+    }
+
+    async removeButtonItemFromCart(itemName: string, expectedItemCount: string) {
         await this.page.click(`#remove-${itemName}`);
         await expect(this.cartBadge).toHaveText(expectedItemCount);
     }
@@ -39,7 +49,7 @@ export class CartPageObjectModel {
         await this.page.selectOption(".product_sort_container", "Name (A to Z)");
     }
 
-    // hranatá závorka, protože vrací POLE stringů
+    // Square brackets, because it returns an ARRAY of strings
     async getAllItemNames(): Promise<string[]> {
         return await this.page.locator(".inventory_item_name").allTextContents();
     }
@@ -59,13 +69,13 @@ export class CartPageObjectModel {
     }
 
     async getAllItemPrices(): Promise<number[]> {
-        // Find all item prices (deklarace neměnné konstanty productPrices, které přiřazuji hodnotu lokátoru s metodou allTextContents)
+        // Find all item prices (declaration of an immutable constant productPrices, to which I assign the value of a locator using the allTextContents method).
         const productPrices = await this.page.locator(".inventory_item_price").allTextContents();
         // Remove $ sign and transform all prices from string to number
         return productPrices.map(price => parseFloat(price.replace('$', '')));
     }
 
-    // : Promise<number[]> = návratový typ metody
+    // : Promise<number[]> = Return type of the method (návratový typ metody)
     async getSortedPricesLowToHigh(): Promise<number[]> {
         const numbers = await this.getAllItemPrices()
         // Sort prices as numbers from low to high
