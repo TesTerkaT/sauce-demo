@@ -3,12 +3,12 @@ import {expect, Locator, Page} from "@playwright/test";
 export class CartPageObjectModel {
     readonly page: Page;
     readonly cartBadge: Locator;
-    readonly itemPrice: Locator;
+    readonly priceLocator: Locator;
 
     constructor(page: Page) {
         this.page = page
         this.cartBadge = page.locator(".shopping_cart_link");
-        this.itemPrice = page.locator(".inventory_item_price").locator("nth=0");
+        this.priceLocator = page.locator(".inventory_item_price");
     }
 
     async addItemToCart(itemName: string, expectedItemCount: string) {
@@ -51,12 +51,28 @@ export class CartPageObjectModel {
 
     async sortPriceLowToHigh() {
         await this.page.selectOption(".product_sort_container", "Price (low to high)");
-        await expect(this.itemPrice).toHaveText("$7.99");
+    }
+
+    async getAllItemPrices(): Promise<number[]> {
+        // Find all item prices (deklarace neměnné konstanty productPrices, které přiřazuji hodnotu lokátoru s metodou allTextContents)
+        const productPrices = await this.page.locator(".inventory_item_price").allTextContents();
+        // Remove $ sign and transform all prices from string to number
+        const numbers = productPrices.map(price => parseFloat(price.replace('$', '')));
+
+        return numbers;
+    }
+
+    // : Promise<number[]> = návratový typ metody
+    async getSortedPricesLowToHigh(): Promise<number[]> {
+        const numbers = await this.getAllItemPrices()
+        // Sort prices as numbers from low to high
+        const sorted = numbers.sort((a, b) => a - b);
+
+        return sorted
     }
 
     async sortPriceHighToLow() {
         await this.page.selectOption(".product_sort_container", "Price (high to low)");
-        await expect(this.itemPrice).toHaveText("$49.99");
     }
 
     async itemNameNavigation(itemName: string, itemNumber: number) {
