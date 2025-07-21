@@ -35,18 +35,23 @@ export class CartPageObjectModel {
         await expect(removeButton).toHaveText("Add to cart");
     }
 
-    async sortZA() {
-        await this.page.selectOption(".product_sort_container", "Name (Z to A)");
-
-        const item3 = this.page.locator("#item_3_title_link");
-        await expect(item3).toHaveText("Test.allTheThings() T-Shirt (Red)");
-    }
-
     async sortAZ() {
         await this.page.selectOption(".product_sort_container", "Name (A to Z)");
+    }
 
-        const item4 = this.page.locator("#item_4_title_link");
-        await expect(item4).toHaveText("Sauce Labs Backpack");
+    // hranatá závorka, protože vrací POLE stringů
+    async getAllItemNames(): Promise<string[]> {
+        return await this.page.locator(".inventory_item_name").allTextContents();
+    }
+
+    async getSortedItemNamesAZ(): Promise<string[]> {
+        const names = await this.getAllItemNames();
+        // a.localeCompare(b) compares two strings alphabetically (A–Z)
+        return names.sort((a, b) => a.localeCompare(b));
+    }
+
+    async sortZA() {
+        await this.page.selectOption(".product_sort_container", "Name (Z to A)");
     }
 
     async sortPriceLowToHigh() {

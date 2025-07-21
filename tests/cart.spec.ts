@@ -37,21 +37,35 @@ test.describe('Cart suite', () => {
         await cartPage.removeToAdd("sauce-labs-backpack")
     })
 
+    test("Sort items by name A-Z", async ({page}) => {
+        const loginPage = new LoginPage(page);
+        const cartPage = new CartPageObjectModel(page);
+
+        await loginPage.login("standard_user", "secret_sauce");
+        await cartPage.sortAZ()
+
+        const names = await cartPage.getAllItemNames();
+        const sortedNames = await cartPage.getSortedItemNamesAZ();
+
+        for (let i = 0; i < names.length; i++) {
+            expect(names[i]).toEqual(sortedNames[i]);
+        }
+    })
+
     test("Sort items by name Z-A", async ({page}) => {
         const loginPage = new LoginPage(page);
         const cartPage = new CartPageObjectModel(page);
 
         await loginPage.login("standard_user", "secret_sauce");
         await cartPage.sortZA()
-    })
 
-    test("Sort items by name A-Z", async ({page}) => {
-        const loginPage = new LoginPage(page);
-        const cartPage = new CartPageObjectModel(page);
+        const names = await cartPage.getAllItemNames();
+        const sortedNames = await cartPage.getSortedItemNamesAZ();
+        const reversedNames = sortedNames.reverse();
 
-        await loginPage.login("standard_user", "secret_sauce");
-        await cartPage.sortZA()
-        await cartPage.sortAZ()
+        for (let i = 0; i < names.length; i++) {
+            expect(names[i]).toEqual(reversedNames[i]);
+        }
     })
 
     test("Sort items by price (low to high)", async ({page}) => {
