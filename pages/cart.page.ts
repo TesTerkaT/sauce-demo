@@ -1,4 +1,5 @@
 import {expect, Locator, Page} from "@playwright/test";
+import {urls} from "../model/cart.constants";
 
 export class CartPageObjectModel {
     readonly page: Page;
@@ -6,7 +7,7 @@ export class CartPageObjectModel {
     readonly priceLocator: Locator;
 
     constructor(page: Page) {
-        this.page = page
+        this.page = page;
         this.cartBadge = page.locator(".shopping_cart_link");
         this.priceLocator = page.locator(".inventory_item_price");
     }
@@ -18,7 +19,7 @@ export class CartPageObjectModel {
 
     async goToCart() {
         await this.page.click(".shopping_cart_link");
-        await expect(this.page).toHaveURL("https://www.saucedemo.com/cart.html");
+        await expect(this.page).toHaveURL(urls.cart);
     }
 
     async removeItemFromCart(itemName: string, expectedItemCount: string) {
@@ -77,9 +78,9 @@ export class CartPageObjectModel {
 
     // : Promise<number[]> = Return type of the method (návratový typ metody)
     async getSortedPricesLowToHigh(): Promise<number[]> {
-        const numbers = await this.getAllItemPrices()
+        const numbers = await this.getAllItemPrices();
         // Sort prices as numbers from low to high
-        return numbers.sort((a, b) => a - b)
+        return numbers.sort((a, b) => a - b);
     }
 
     async sortPriceHighToLow() {
