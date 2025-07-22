@@ -11,13 +11,23 @@ test.describe('Cart suite', () => {
         await cartPage.addItemToCart("sauce-labs-backpack", "1")
     })
 
+    test("Remove product from cart", async ({page}) => {
+        const loginPage = new LoginPage(page);
+        const cartPage = new CartPageObjectModel(page);
+
+        await loginPage.login("standard_user", "secret_sauce");
+        await cartPage.addItemToCart("sauce-labs-backpack", "1")
+        await cartPage.goToCart()
+        await cartPage.removeItemFromCart("sauce-labs-backpack", "")
+    })
+
     test("Remove button removes product from cart", async ({page}) => {
         const loginPage = new LoginPage(page);
         const cartPage = new CartPageObjectModel(page);
 
         await loginPage.login("standard_user", "secret_sauce");
         await cartPage.addItemToCart("sauce-labs-backpack", "1")
-        await cartPage.removeItemFromCart("sauce-labs-backpack", "")
+        await cartPage.removeButtonItemFromCart("sauce-labs-backpack", "")
     })
 
     test("Add to cart button changes to Remove", async ({page}) => {
@@ -85,21 +95,21 @@ test.describe('Cart suite', () => {
 
     test("Sort items by price (high to low)", async ({page}) => {
         const loginPage = new LoginPage(page);
-        // deklarace neměnné konstanty cartPage, které přidávám hodnotu nové instance classy CartPageObjectModel
+        // Declaration of an immutable constant cartPage, to which I assign the value of a new instance of the class CartPageObjectModel.
         const cartPage = new CartPageObjectModel(page);
 
         await loginPage.login("standard_user", "secret_sauce");
-        // na instanci cartPage použij metodu sortPriceHighToLow, která klikne na sort lištu a vybere high to low
+        // Use the sortPriceHighToLow method on the cartPage instance, which clicks on the sort dropdown and selects "high to low".
         await cartPage.sortPriceHighToLow()
 
-        // deklarace neměnné konstanty prices (vrací typ number) má hodnotu instance cartPage která metodou getAllItemPrices shromáždí ceny všech produktů (ubírá $ a převádí ceny ze stringů na numbers)
+        // Declaration of an immutable constant "prices" (returns type number), which is assigned the value from the cartPage instance that, using the getAllItemPrices method, gathers all product prices (removes the $ symbol and converts prices from strings to numbers).
         const prices = await cartPage.getAllItemPrices();
-        // deklarace neměnné konstanty sortedPrices (vrací typ number) má hodnotu volani metody getSortedPricesLowToHigh provede metodu getAllItemPrices a následně částky seřadí low to high
+        // Declaration of an immutable constant sortedPrices (returns type number), which is assigned the value from calling the getSortedPricesLowToHigh method — it executes the getAllItemPrices method and then sorts the amounts from low to high.
         const sortedPrices = await cartPage.getSortedPricesLowToHigh();
-        // seřadí výsledek nad high to low
+        // Sorts the result from high to low
         const reversedPrices = sortedPrices.reverse();
 
-        // loop porovná výsledek řazení stránky s mým řazením
+        // The loop compares the page’s sorting result with my sorting.
         for (let i = 0; i < prices.length; i++) {
             expect(prices[i]).toEqual(reversedPrices[i]);
         }
