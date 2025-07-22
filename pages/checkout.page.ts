@@ -14,7 +14,6 @@ export class CheckoutPage {
   }
 
   async checkoutStepOne(firstName: string, lastName: string, zip: number) {
-    await this.page.waitForTimeout();
     await this.page.fill("#first-name", `${firstName}`);
     await this.page.fill("#last-name", `${lastName}`);
     await this.page.fill("#postal-code", `${zip}`);
